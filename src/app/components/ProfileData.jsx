@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const ProfileData = () => {
@@ -12,18 +13,20 @@ const ProfileData = () => {
             .then(data => setData(data));
     }, []);
 
+    const router = useRouter();
+
     return (
         <div className="px-20 my-10">
             <div className="grid grid-cols-4 gap-4">
                 {
                     data.map((friend, index) => (
-                        <div key={index}>
+                        <div key={index} onClick={() => router.push(`/profile/${friend.id}`)}>
 
                             <div className="w-80 bg-white shadow-xl rounded-2xl p-6 flex flex-col items-center text-center space-y-3">
 
-                               <Image src={friend.picture} alt={friend.name} width={100} height={100} className="rounded-full object-cover">
+                                <Image src={friend.picture} alt={friend.name} width={100} height={100} className="rounded-full object-cover">
 
-                               </Image>
+                                </Image>
 
 
                                 <h2 className="text-xl font-bold text-gray-800">

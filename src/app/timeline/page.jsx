@@ -1,9 +1,10 @@
 import React from 'react';
+import MainView from './MainView';
 
-const TimeLinePage = () => {
+const TimeLinePage = ({ data }) => {
     return (
         <div>
-            <h1>Timeline</h1>
+            <MainView data={data} />
         </div>
     );
 };
