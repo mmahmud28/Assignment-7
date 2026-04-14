@@ -21,9 +21,9 @@ const Navbar = () => {
                     </Link>
                 </div>
                 <div className="flex gap-4 ">
-                    <Link href="/home">
+                    <Link href="/">
                         <div onClick={() => setActive("home")} className={`flex items-center gap-2 px-6 py-3 rounded-sm shadow-md transition duration-300 w-fit
-          ${pathname === "/home"
+          ${pathname === "/"
                                 ? "bg-[#244D3F] text-white"
                                 : "text-black hover:bg-green-800 hover:text-white"
                             }`}>
