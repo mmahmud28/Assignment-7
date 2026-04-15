@@ -41,7 +41,7 @@ const ProfileData = () => {
                                     {friend.tags.map((tag, i) => (
                                         <span
                                             key={i}
-                                            className="px-3 py-1 text-xs rounded-full bg-green-100 text-green-700"
+                                            className="px-3 py-2 text-xs rounded-full bg-green-100 text-black font-semibold"
                                         >
                                             {tag.toUpperCase()}
                                         </span>
@@ -54,7 +54,7 @@ const ProfileData = () => {
                                             ? "bg-red-500"
                                             : friend.status === "almost due"
                                                 ? "bg-orange-400"
-                                                : "bg-green-500"
+                                                : "bg-[#244D3F]"
                                         }`}
                                 >
                                     {friend.status === "overdue"
