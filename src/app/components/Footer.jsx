@@ -28,6 +28,12 @@ const Footer = () => {
                         </a>
                     </div>
                 </div>
+                <div>
+                    <div className='flex text-white justify-center gap-10 mt-5'>
+                        <small>200</small>
+                        <small>2000</small>
+                    </div>
+                </div>
             </div>
         </div>
     );

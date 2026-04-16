@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
@@ -21,7 +20,32 @@ const ProfileDetailesPage = () => {
 
     const friend = data.find(f => f.id == id);
 
+    const handelClick = (type,message) => {
+        const newInteraction = {
+            friendId: id,
+            type,
+            message: message,
+            date: new Date().toISOString()
+        };
 
+        const existing = JSON.parse(localStorage.getItem("interactions")) || [];
+
+        const updated = [newInteraction, ...existing];
+
+        localStorage.setItem("interactions", JSON.stringify(updated));
+
+
+        setInteractions(updated);
+    };
+
+    const [interactions, setInteractions] = useState([]);
+
+    useEffect(() => {
+        const stored = JSON.parse(localStorage.getItem("interactions")) || [];
+        setInteractions(stored);
+    }, []);
+
+    const filteredInteractions = interactions.filter(item => item.friendId == id);
 
     return (
         <div className="max-w-300 mx-auto items-center justify-center">
@@ -125,30 +149,29 @@ const ProfileDetailesPage = () => {
                     </div>
                     <div className="card bg-base-100 shadow-sm p-4">
                         <div className="flex justify-between">
-                            <p className="text-[#244D3F] font-semibold text-xl">Relationship Goal</p>
+                            <p className="text-[#244D3F] font-bold text-2xl">Relationship Goal</p>
                             <button className="btn">Edit</button>
                         </div>
                         <p className="">Connect every <span className="text-xl font-semibold">30 days </span></p>
                     </div>
                     <div className="p-4 card bg-base-100 shadow-sm">
-                        <p className="text-[#244D3F] font-semibold text-xl">Quick Check-In</p>
-                        <div className=" flex gap-4 justify-between mt-2">
-                            <div className="bg-gray-100 w-full space-y-2 card justify-center items-center p-4">
-                                <IoMdCall className="text-2xl font-bold" />
+                        <p className="text-[#244D3F] font-bold text-2xl">Quick Check-In</p>
+                        <div className="flex gap-4 justify-between mt-2">
+
+                            <div onClick={() => handelClick("Call","Let's have a call")} className="bg-gray-100 w-full card p-4 cursor-pointer text-center">
+                                <IoMdCall className="text-2xl mx-auto" />
                                 <p className="text-xl font-bold">Call</p>
                             </div>
 
-                            <div className="bg-gray-100 justify-center space-y-2 items-center  w-full card p-4">
-                                <IoMdText className="text-2xl font-bold" />
+                            <div onClick={() => handelClick("Text","Hey, how are you doing?")} className="bg-gray-100 w-full card p-4 cursor-pointer text-center">
+                                <IoMdText className="text-2xl mx-auto" />
                                 <p className="text-xl font-bold">Text</p>
                             </div>
 
-
-                            <div className="bg-gray-100 justify-center space-y-2 items-center  w-full card p-4">
-                                <FaVideo className="text-2xl font-bold" />
+                            <div onClick={() => handelClick("Video","Let's have a video call")} className="bg-gray-100 w-full card p-4 cursor-pointer text-center">
+                                <FaVideo className="text-2xl mx-auto" />
                                 <p className="text-xl font-bold">Video</p>
                             </div>
-
 
                         </div>
                     </div>
@@ -163,30 +186,24 @@ const ProfileDetailesPage = () => {
                         </div>
 
                         <div className="space-y-3">
-                            <div className="flex gap-2 items-center p-4 bg-gray-100 rounded-sm">
-                                <p><MdOutlineMessage className="text-4xl" /></p>
-                                <div>
-                                    <h1 className="text-xl font-semibold">Text</h1>
-                                    <p className="font-semibold">Asked for career advice</p>
-                                </div>
-                            </div>
+                            {
+                                filteredInteractions.map((item, i) => (
+                                    <div key={i} className="flex gap-2 items-center p-2 bg-gray-100 rounded-sm">
 
-                            <div className="flex gap-2 items-center p-4 bg-gray-100 rounded-sm">
-                                <p><IoMdCall className="text-4xl" /></p>
-                                <div>
-                                    <h1 className="text-xl font-semibold">Call</h1>
-                                    <p className="font-semibold">Industry conference meetup</p>
-                                </div>
-                            </div>
+                                        <p>
+                                            {item.type === "Call" && <IoMdCall className="text-4xl" />}
+                                            {item.type === "Text" && <MdOutlineMessage className="text-4xl" />}
+                                            {item.type === "Video" && <FaVideo className="text-4xl" />}
+                                        </p>
 
+                                        <div>
+                                            <h1 className="text-xl font-semibold">{item.type}</h1>
+                                            <p className="font-semibold">{item.message}</p>
+                                        </div>
 
-                            <div className="flex gap-2 items-center p-4 bg-gray-100 rounded-sm">
-                                <p><FaVideo className="text-4xl" /></p>
-                                <div>
-                                    <h1 className="text-xl font-semibold">Video</h1>
-                                    <p className="font-semibold">Asked for career advice</p>
-                                </div>
-                            </div>
+                                    </div>
+                                ))
+                            }
                         </div>
                     </div>
                 </div>

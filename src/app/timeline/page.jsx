@@ -1,8 +1,33 @@
-import React from 'react';
+/* eslint-disable react-hooks/set-state-in-effect */
+"use client";
+import React, { useEffect, useState } from 'react';
 import { FaVideo } from 'react-icons/fa';
 import { IoMdCall } from 'react-icons/io';
 import { MdOutlineMessage } from 'react-icons/md';
 const TimeLinePage = () => {
+
+
+    const [interactions, setInteractions] = useState([]);
+    const [filter, setFilter] = useState("All");
+    const [search, setSearch] = useState("");
+
+    useEffect(() => {
+        const stored = JSON.parse(localStorage.getItem("interactions")) || [];
+        setInteractions(stored);
+    }, []);
+
+    const filteredData = interactions
+        .filter(item => {
+            if (filter === "All") return true;
+            return item.type === filter;
+        })
+        .filter(item => {
+            return (
+                item.type.toLowerCase().includes(search.toLowerCase()) ||
+                item.message.toLowerCase().includes(search.toLowerCase())
+            );
+        });
+
     return (
         <div className="flex justify-center items-center m-10">
             <div className="w-full max-w-5xl p-5 space-y-4 card shadow-sm">
@@ -13,10 +38,12 @@ const TimeLinePage = () => {
 
                     <div>
                         <div className="dropdown">
-                            <div tabIndex={0} role="button" className="btn m-1">Click</div>
+                            <div tabIndex={0} role="button" className="btn m-1">Filter</div>
                             <ul tabIndex={-1} className="dropdown-content menu bg-base-100 rounded-box z-10 w-52 p-2 shadow-sm">
-                                <li><a>Item 1</a></li>
-                                <li><a>Item 2</a></li>
+                                <li><a onClick={() => setFilter("All")}>All</a></li>
+                                <li><a onClick={() => setFilter("Call")}>Call</a></li>
+                                <li><a onClick={() => setFilter("Text")}>Text</a></li>
+                                <li><a onClick={() => setFilter("Video")}>Video</a></li>
                             </ul>
                         </div>
                     </div>
@@ -39,39 +66,45 @@ const TimeLinePage = () => {
                                     <path d="m21 21-4.3-4.3"></path>
                                 </g>
                             </svg>
-                            <input type="search" required placeholder="Search" />
+                            <input
+                                type="search"
+                                placeholder="Search"
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                            />
                         </label>
                     </div>
 
                 </div>
 
                 <div className='p-4 space-y-4'>
-                    <div className="flex gap-2 items-center p-2 bg-gray-100 rounded-sm">
-                        <p><MdOutlineMessage className="text-4xl" /></p>
-                        <div>
-                            <h1 className="text-xl font-semibold">Text</h1>
-                            <p className="font-semibold">Asked for career advice</p>
-                        </div>
-                    </div>
-
-                    <div className="flex gap-2 items-center p-2 bg-gray-100 rounded-sm">
-                        <p><IoMdCall className="text-4xl" /></p>
-                        <div>
-                            <h1 className="text-xl font-semibold">Call</h1>
-                            <p className="font-semibold">Industry conference meetup</p>
-                        </div>
-                    </div>
 
 
-                    <div className="flex gap-2 items-center p-2 bg-gray-100 rounded-sm">
-                        <p><FaVideo className="text-4xl" /></p>
-                        <div>
-                            <h1 className="text-xl font-semibold">Video</h1>
-                            <p className="font-semibold">Asked for career advice</p>
-                        </div>
-                    </div>
+                    {
+                        filteredData.map((item, i) => (
+                            <div key={i} className="flex gap-3 items-center p-3 bg-gray-100 rounded-lg">
 
+                                <div>
+                                    {item.type === "Call" && <IoMdCall className="text-3xl" />}
+                                    {item.type === "Text" && <MdOutlineMessage className="text-3xl" />}
+                                    {item.type === "Video" && <FaVideo className="text-3xl" />}
+                                </div>
 
+                                <div>
+                                    <h2 className="text-lg font-semibold">{item.type}</h2>
+                                    <p className="text-sm text-gray-600">{item.message}</p>
+                                    <p className="text-xs text-gray-400">
+                                        {new Date(item.date).toLocaleString()}
+                                    </p>
+                                </div>
+
+                            </div>
+                        ))
+                    }
+
+                    {filteredData.length === 0 && (
+                        <p className="text-center text-gray-500">No interactions found</p>
+                    )}
 
                 </div>
             </div>
