@@ -2,9 +2,7 @@ import Link from 'next/link';
 import React from 'react';
 import { IoMdAdd } from 'react-icons/io';
 
-const Banner = ({setFriends}) => {
-
-    console.log(setFriends);
+const Banner = () => {
     
 
     return (
