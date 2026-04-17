@@ -5,28 +5,35 @@ import Image from "next/image";
 import { MdDelete, MdHistory, MdOutlineMessage, MdOutlineNotificationsPaused } from "react-icons/md";
 import { FaArchive, FaVideo } from "react-icons/fa";
 import { IoMdCall, IoMdText } from "react-icons/io";
+import { ToastContainer, toast } from 'react-toastify';
+import Link from "next/link";
 
 const ProfileDetailesPage = () => {
     const params = useParams();
     const id = params?.id;
+
+      const [loading, setLoading] = useState(true);
 
     const [data, setData] = useState([]);
 
     useEffect(() => {
         fetch('/profileData.json')
             .then(res => res.json())
-            .then(data => setData(data));
+            .then(data => setData(data))
+            .finally(() => setLoading(false));
     }, []);
 
     const friend = data.find(f => f.id == id);
 
-    const handelClick = (type,message) => {
+    const handelClick = (type, message) => {
         const newInteraction = {
             friendId: id,
             type,
             message: message,
             date: new Date().toISOString()
         };
+
+        toast.success(`${type} interaction added`);
 
         const existing = JSON.parse(localStorage.getItem("interactions")) || [];
 
@@ -47,13 +54,39 @@ const ProfileDetailesPage = () => {
 
     const filteredInteractions = interactions.filter(item => item.friendId == id);
 
+    const dataDelete = () => {
+        const existing = JSON.parse(localStorage.getItem("interactions")) || [];
+        const hasData = existing.some(item => item.friendId == id);
+
+        if (!hasData) {
+            toast.warning("No data found to delete");
+            return;
+        }
+        const updated = existing.filter(item => item.friendId != id);
+        localStorage.setItem("interactions", JSON.stringify(updated));
+        setInteractions(updated);
+        toast.error("All Data Deleted");
+    }
+
     return (
         <div className="max-w-300 mx-auto items-center justify-center">
+
+            <ToastContainer />
+
+            {
+                loading && (
+                    <div className="flex justify-center items-center h-96">
+                        <p className="text-xl font-semibold">Loading...</p>
+                    </div>
+                )
+            }
 
             <div className="flex gap-2">
                 <div className="w-100 space-y-5 p-10">
                     <div>
                         <div>
+
+
 
                             <div className="bg-white shadow-xl rounded-2xl p-6 flex flex-col items-center text-center space-y-3">
 
@@ -64,6 +97,7 @@ const ProfileDetailesPage = () => {
                                         width={100}
                                         height={100}
                                         className="rounded-full object-cover"
+                                        loading="eager"
                                     />
                                 )}
 
@@ -122,12 +156,13 @@ const ProfileDetailesPage = () => {
                         </p>
                     </div>
 
-                    <div className="flex items-center justify-center gap-4 bg-gray-100 border border-gray-300 rounded-sm px-6 py-4 shadow-sm">
+                    <div onClick={dataDelete} className="flex items-center justify-center gap-4 bg-gray-100 border border-gray-300 rounded-sm px-6 py-4 shadow-sm">
                         <MdDelete className="text-2xl text-red-500" />
 
                         <p className="text-xl font-semibold text-red-500">
                             Delete
                         </p>
+                        
                     </div>
 
                 </div>
@@ -158,17 +193,17 @@ const ProfileDetailesPage = () => {
                         <p className="text-[#244D3F] font-bold text-2xl">Quick Check-In</p>
                         <div className="flex gap-4 justify-between mt-2">
 
-                            <div onClick={() => handelClick("Call","Let's have a call")} className="bg-gray-100 w-full card p-4 cursor-pointer text-center">
+                            <div onClick={() => handelClick("Call", "Call With " + friend?.name)} className="bg-gray-100 w-full card p-4 cursor-pointer text-center">
                                 <IoMdCall className="text-2xl mx-auto" />
                                 <p className="text-xl font-bold">Call</p>
                             </div>
 
-                            <div onClick={() => handelClick("Text","Hey, how are you doing?")} className="bg-gray-100 w-full card p-4 cursor-pointer text-center">
+                            <div onClick={() => handelClick("Text", "Text With " + friend?.name)} className="bg-gray-100 w-full card p-4 cursor-pointer text-center">
                                 <IoMdText className="text-2xl mx-auto" />
                                 <p className="text-xl font-bold">Text</p>
                             </div>
 
-                            <div onClick={() => handelClick("Video","Let's have a video call")} className="bg-gray-100 w-full card p-4 cursor-pointer text-center">
+                            <div onClick={() => handelClick("Video", "Video With " + friend?.name)} className="bg-gray-100 w-full card p-4 cursor-pointer text-center">
                                 <FaVideo className="text-2xl mx-auto" />
                                 <p className="text-xl font-bold">Video</p>
                             </div>
@@ -179,10 +214,10 @@ const ProfileDetailesPage = () => {
                     <div className="card shadow-sm p-4 space-y-3">
                         <div className="flex justify-between items-center">
                             <h1 className="text-[#244D3F] text-2xl font-bold">Recent Interactions</h1>
-                            <button className="flex items-center gap-2 btn">
+                            <Link href={"/timeline"} className="flex items-center gap-2 btn">
                                 <MdHistory />
                                 Full History
-                            </button>
+                            </Link>
                         </div>
 
                         <div className="space-y-3">

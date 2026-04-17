@@ -4,19 +4,31 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const ProfileData = () => {
+
+    const [loading, setLoading] = useState(true);
+
     const [data, setData] = useState([]);
     const router = useRouter();
 
     useEffect(() => {
         fetch("/profileData.json")
             .then((res) => res.json())
-            .then((data) => setData(data));
+            .then((data) => setData(data))
+            .finally(() => setLoading(false));
     }, []);
 
     return (
         <div className="px-4 sm:px-6 lg:px-10 xl:px-20 my-10">
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+
+                {
+                    loading && (
+                        <div className="col-span-full flex justify-center items-center">
+                            <p className="text-gray-500 text-lg">Loading...</p>
+                        </div>
+                    )
+                }
 
                 {data.map((friend, index) => (
                     <div
@@ -33,6 +45,7 @@ const ProfileData = () => {
                                 width={100}
                                 height={100}
                                 className="rounded-full object-cover"
+                                loading="eager"
                             />
 
                             <h2 className="text-lg sm:text-xl font-bold text-gray-800">
@@ -56,19 +69,18 @@ const ProfileData = () => {
 
                             <span
                                 className={`px-3 sm:px-4 py-1 rounded-full text-xs sm:text-sm font-medium text-white
-                                ${
-                                    friend.status === "overdue"
+                                ${friend.status === "overdue"
                                         ? "bg-red-500"
                                         : friend.status === "almost due"
-                                        ? "bg-orange-400"
-                                        : "bg-[#244D3F]"
-                                }`}
+                                            ? "bg-orange-400"
+                                            : "bg-[#244D3F]"
+                                    }`}
                             >
                                 {friend.status === "overdue"
                                     ? "Overdue"
                                     : friend.status === "almost due"
-                                    ? "Almost Due"
-                                    : "On Track"}
+                                        ? "Almost Due"
+                                        : "On Track"}
                             </span>
 
                         </div>
@@ -79,6 +91,7 @@ const ProfileData = () => {
             </div>
         </div>
     );
+
 };
 
 export default ProfileData;

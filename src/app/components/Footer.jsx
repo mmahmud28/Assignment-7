@@ -8,7 +8,13 @@ const Footer = () => {
         <div>
             <div className='bg-[#244D3F] pt-20 pb-7.5'>
                 <div className='flex flex-col items-center text-center'>
-                    <Image src={Logo} alt="Logo" width={180} height={40} />
+                    <Image
+                        src={Logo}
+                        alt="Logo"
+                        width={180}
+                        height={40}
+                        className="h-auto w-auto"
+                    />
 
                     <p className='mt-4 text-white'>
                         Your personal shelf of meaningful connections. Browse, tend, and nurture the relationships that matter most.
@@ -28,10 +34,15 @@ const Footer = () => {
                         </a>
                     </div>
                 </div>
-                <div>
-                    <div className='flex text-white justify-center gap-10 mt-5'>
-                        <small>200</small>
-                        <small>2000</small>
+                <div className='max-w-300 mx-auto'>
+                    <div className="flex text-white justify-between items-center gap-10 mt-5">
+                        <small>© 2026 KeenKeeper. All rights reserved.</small>
+
+                        <div className="flex gap-10 list-none">
+                            <li className="list-none">Privacy Policy</li>
+                            <li className="list-none">Terms of Service</li>
+                            <li className="list-none">Cookies</li>
+                        </div>
                     </div>
                 </div>
             </div>

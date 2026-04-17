@@ -17,7 +17,7 @@ const Navbar = () => {
             <div className="flex-1 w-full flex justify-center md:justify-start">
                 <Link href="/">
                     <div className="flex items-center gap-2">
-                        <Image src={Logo} alt="Logo" width={120} height={35} />
+                        <Image className="w-full h-auto" loading="eager" src={Logo} alt="Logo" width={120} height={35} />
                     </div>
                 </Link>
             </div>

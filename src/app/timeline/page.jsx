@@ -91,10 +91,14 @@ const TimeLinePage = () => {
                                 </div>
 
                                 <div>
-                                    <h2 className="text-lg font-semibold">{item.type}</h2>
-                                    <p className="text-sm text-gray-600">{item.message}</p>
-                                    <p className="text-xs text-gray-400">
-                                        {new Date(item.date).toLocaleString()}
+                                    <h2 className="text-2xl font-semibold">{item.type}</h2>
+                                    <p className="text-xl text-gray-900">{item.message}</p>
+                                    <p className="text-sm text-gray-700">
+                                        {new Date(item.date).toLocaleDateString("en-US", {
+                                            year: "numeric",
+                                            month: "long",
+                                            day: "numeric",
+                                        })}
                                     </p>
                                 </div>
 
