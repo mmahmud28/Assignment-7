@@ -42,9 +42,9 @@ const ProfileData = () => {
                             <Image
                                 src={friend.picture}
                                 alt={friend.name}
-                                width={100}
+                                width={150}
                                 height={100}
-                                className="rounded-full object-cover"
+                                className="rounded-full object-cover w-24 h-24 sm:w-28 sm:h-28"
                                 loading="eager"
                             />
 

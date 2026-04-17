@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { notFound, useParams } from "next/navigation";
 import Image from "next/image";
 import { MdDelete, MdHistory, MdOutlineMessage, MdOutlineNotificationsPaused } from "react-icons/md";
 import { FaArchive, FaVideo } from "react-icons/fa";
@@ -12,7 +12,7 @@ const ProfileDetailesPage = () => {
     const params = useParams();
     const id = params?.id;
 
-      const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(true);
 
     const [data, setData] = useState([]);
 
@@ -24,6 +24,11 @@ const ProfileDetailesPage = () => {
     }, []);
 
     const friend = data.find(f => f.id == id);
+
+    if (!loading && !friend) {
+        notFound();
+    }
+
 
     const handelClick = (type, message) => {
         const newInteraction = {
@@ -162,7 +167,7 @@ const ProfileDetailesPage = () => {
                         <p className="text-xl font-semibold text-red-500">
                             Delete
                         </p>
-                        
+
                     </div>
 
                 </div>

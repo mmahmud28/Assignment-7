@@ -2,7 +2,11 @@ import Link from 'next/link';
 import React from 'react';
 import { IoMdAdd } from 'react-icons/io';
 
-const Banner = () => {
+const Banner = ({setFriends}) => {
+
+    console.log(setFriends);
+    
+
     return (
         <div className='flex flex-col container mx-auto items-center justify-center text-center pt-20 pb-10 space-y-6'>
             <h1 className="text-5xl font-bold">
